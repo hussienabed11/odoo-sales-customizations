@@ -7,6 +7,19 @@ class SaleOrder(models.Model):
 
     is_priority = fields.Boolean(string="Priority Order")
 
+    def action_mark_as_priority(self):
+        for order in self:
+            if order.state not in ['draft', 'sent']:
+                raise UserError(
+                    "You can only mark draft or sent orders as priority."
+                )
+
+            order.is_priority = True
+            order.message_post(
+                body="This sale order has been marked as PRIORITY."
+            )
+
+
     def action_confirm(self):
 
 
